@@ -4,6 +4,7 @@ from autodoclass import encoder
 from autodoclass import reader
 from autodoclass import tokenizer
 
+
 class TestEncoder:
     def test_init(self):
         """ Test the initialization of the Encoder class
@@ -29,15 +30,6 @@ class TestEncoder:
         with pytest.raises(NotImplementedError):
             encoder.Encoder().train(dummy_folder)
 
-    def test_encode_exception(self, dummy_text):
-        """ Test text encode on encoder
-        Should raise exception on Encoder class
-
-        :return None:
-        """
-        with pytest.raises(NotImplementedError):
-            encoder.Encoder().encode(dummy_text)
-
     def test_serialize(self):
         """ Test serilization of the model
 
@@ -54,35 +46,6 @@ class TestEncoder:
         assert encoder.Encoder().deserialize(serialized)
 
 
-class TestEncodedInputIterator:
-    def test_init(self, dummy_folder):
-        """ Test initialization for the class
-
-        :return None:
-        """
-        assert encoder.EncodedInputIterator(
-            reader.DocumentReader(dummy_folder),
-            tokenizer.WhitespaceTokenizer(),
-            "Prefix_{}"
-        )
-
-    def test_iter(self, dummy_folder):
-        """ Test iterating outputs
-
-        :return None:
-        """
-        iterator = encoder.EncodedInputIterator(
-            reader.DocumentReader(dummy_folder),
-            tokenizer.WhitespaceTokenizer(),
-            "Prefix_{}"
-        )
-        for train_input in iterator:
-            assert isinstance(
-                train_input,
-                gensim.models.doc2vec.TaggedDocument
-            )
-
-
 class TestDocumentEncoder:
     def test_init(self):
         """ Test initialization of the class
@@ -97,3 +60,39 @@ class TestDocumentEncoder:
         :return None:
         """
         assert encoder.DocumentEncoder().train(dummy_folder)
+
+    def test_encode(self, dummy_folder, dummy_text):
+        """ Test text encoding on encoder
+
+        :return None:
+        """
+
+        assert encoder.DocumentEncoder().train(dummy_folder).encode(
+            tokenizer.WhitespaceTokenizer().transform(dummy_text)
+        ).any()
+
+
+class TestLineEncoder:
+    def test_init(self):
+        """ Test initialization of the class
+
+        :return None:
+        """
+        assert encoder.LineEncoder()
+
+    def test_train(self, dummy_folder):
+        """ Test training the encoder
+
+        :return None:
+        """
+        assert encoder.LineEncoder().train(dummy_folder)
+
+    def test_encode(self, dummy_folder, dummy_text):
+        """ Test text encoding on encoder
+
+        :return None:
+        """
+
+        assert encoder.LineEncoder().train(dummy_folder).encode(
+            tokenizer.WhitespaceTokenizer().transform(dummy_text)
+        ).any()

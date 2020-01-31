@@ -1,7 +1,7 @@
 import gensim
 import tempfile
-from autodoclass import reader
-from autodoclass import tokenizer
+from autodoclass import iterator
+
 
 class Encoder:
     def __init__(self, **kwargs):
@@ -20,13 +20,12 @@ class Encoder:
         """
         raise NotImplementedError("train not implemented")
 
-    def encode(self, text):
-        """ Encode the text
-        Raise exception on base Encoder Model
+    def encode(self, tokens):
+        """ Encode the input text
 
-        :return numpy.array:
+        :return self:
         """
-        raise NotImplementedError("encode not implemented")
+        return self.model.infer_vector(tokens)
 
     def serialize(self):
         """ Return serialized form of the encoder
@@ -51,43 +50,37 @@ class Encoder:
         return self
 
 
-class EncodedInputIterator:
-    def __init__(self, text_reader, tokenizer, label_format):
-        """ Initialize the encoded input iterator
-
-        :param str label_format: prefix format for labels on LabeledSentence
-        :param autodoclass.tokenizer.Tokenizer:
-        :param autodoclass.reader.Reader:
-        """
-        self.text_reader = text_reader
-        self.tokenizer = tokenizer
-        self.label_format = label_format
-
-    def __iter__(self):
-        """ Iterate inputs to format consistent with model inputs
-
-        :yield gensim.models.doc2vec.LabeledSentence:
-        """
-        for text_index, text in enumerate(self.text_reader.yield_texts()):
-            yield gensim.models.doc2vec.TaggedDocument(
-                words = self.tokenizer.transform(text),
-                tags = [self.label_format.format(text_index)]
-            )
-
-
 class DocumentEncoder(Encoder):
     def train(self, folder):
         """ Train the document encoder from the folder
 
         :return self:
         """
-        iterator = EncodedInputIterator(
-            reader.DocumentReader(folder),
-            tokenizer.WhitespaceTokenizer(),
-            "Document_{}"
+        self.model.build_vocab(
+            iterator.DocumentEncodedInputIterator(folder)
+        )
+        self.model.train(
+            iterator.DocumentEncodedInputIterator(folder),
+            total_words = self.model.corpus_count,
+            epochs = self.model.epochs
         )
 
-        self.model.build_vocab(iterator)
-        self.model.train(iterator, total_words = self.model.corpus_count)
+        return self
+
+
+class LineEncoder(Encoder):
+    def train(self, folder):
+        """ Train the document encoder from the folder
+
+        :return self:
+        """
+        self.model.build_vocab(
+            iterator.LineEncodedInputIterator(folder)
+        )
+        self.model.train(
+            iterator.LineEncodedInputIterator(folder),
+            total_words = self.model.corpus_count,
+            epochs = self.model.epochs
+        )
 
         return self

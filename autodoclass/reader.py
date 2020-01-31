@@ -1,5 +1,6 @@
 import os
 
+
 class Reader:
     def __init__(self, folder):
         self.folder = folder
