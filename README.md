@@ -51,23 +51,3 @@ model saved to autodoclass.model.date.pkl
 >>> autodoclass.predict("/path/to/text/file.txt")
 (10, 0.7, [(1,0.75), (3,0.65) ... (12, 0.87)])
 ```
-
-## Code Structure
-
-Autodoclass: Train and Predict Document Type and Subsections
-
-Reader
-  DocumentReader
-  LineReader
-
-Tokenizer
-  WhitespaceTokenizer
-  SpacyTokenizer
-
-Encoder
-  DocumentEncoder
-  LineEncoder
-
-Clusterer
-  DocumentClusterer
-  LineClusterer

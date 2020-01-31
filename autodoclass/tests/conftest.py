@@ -1,5 +1,6 @@
 import pytest
 
+
 @pytest.fixture
 def dummy_text():
     """ Return a dummy text to use for tests
@@ -24,6 +25,7 @@ def dummy_folder(tmp_path, dummy_text):
     """
     folder = tmp_path / "texts"
     folder.mkdir()
-    path = folder / "dummy.txt"
-    path.write_text(dummy_text)
+    for file_index in range(10):
+        path = folder / "dummy_{file_index}.txt".format(file_index = file_index)
+        path.write_text(dummy_text)
     return str(folder)
