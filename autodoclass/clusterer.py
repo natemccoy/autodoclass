@@ -66,7 +66,7 @@ class DocumentClusterer(Clusterer):
                 )
             ]
         )
-        return labels[0], strengths[0]
+        return int(labels[0]), float(strengths[0])
 
 
 class LineClusterer(Clusterer):
@@ -94,4 +94,4 @@ class LineClusterer(Clusterer):
                 )
             ]
         )
-        return labels[0], strengths[0]
+        return int(labels[0]), float(strengths[0])
