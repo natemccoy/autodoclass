@@ -29,6 +29,22 @@ class TestClusterer:
         with pytest.raises(NotImplementedError):
             clusterer.Clusterer(encoder.Encoder()).predict(dummy_text)
 
+    def test_serialize(self):
+        """ Test the serialization process
+
+        :return None:
+        """
+        assert clusterer.Clusterer(encoder.Encoder()).serialize()
+
+    def test_deserialize(self):
+        """ Test the deserialization process
+
+        :return None:
+        """
+        serialized = clusterer.Clusterer(encoder.Encoder()).serialize()
+        assert clusterer.Clusterer(encoder.Encoder()).deserialize(serialized)
+
+
 
 class TestDocumentClusterer:
     def test_init(self):

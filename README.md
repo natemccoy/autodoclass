@@ -36,18 +36,20 @@ the other based on the texts separated by newlines.
 
 ### Deducing Classes
 
-Using UMAP/DBSCAN we automatically deduce the amount of classes using well
+Using HDBSCAN we automatically deduce the amount of classes using well
 researched techniques for clustering. The assumption is that given a good
 enough amount of data, we can determine similarity deducing relatedness hence
 a finite class set.
 
 ## Usage
 
-```
->>> autodoclass = Autodoclass()
->>> autodoclass.train("/path/to/text/files")
-model saved to autodoclass.model.date.pkl
+Basic usage, training, predicting, saving and loading.
 
->>> autodoclass.predict("/path/to/text/file.txt")
-(10, 0.7, [(1,0.75), (3,0.65) ... (12, 0.87)])
+```
+>>> adc = Autodoclass()
+>>> adc.train("/path/to/text/files")
+>>> adc.predict("Some raw text data\nWith multiple lines")
+( (10, 0.7), ((1, 0.75), ... (12, 0.87)) )
+>>> adc.save("adc.model.date.pkl")
+>>> Autodoclass.load("adc.model.date.pkl")
 ```

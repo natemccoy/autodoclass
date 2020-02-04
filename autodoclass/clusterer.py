@@ -1,4 +1,5 @@
 import hdbscan
+import pickle
 from autodoclass import iterator
 from autodoclass import configuration
 
@@ -23,6 +24,21 @@ class Clusterer:
         :raises NotImplementedError:
         """
         raise NotImplementedError("predict not implemented")
+
+    def serialize(self):
+        """ Serialize the clusterer into bytes
+
+        :return bytes:
+        """
+        return pickle.dumps(self.model)
+
+    def deserialize(self, serialized):
+        """ Deserialize the clusterer
+
+        :return self:
+        """
+        self.model = pickle.loads(serialized)
+        return self
 
 
 class DocumentClusterer(Clusterer):
@@ -50,7 +66,7 @@ class DocumentClusterer(Clusterer):
                 )
             ]
         )
-        return labels[0], strengths[0]
+        return int(labels[0]), float(strengths[0])
 
 
 class LineClusterer(Clusterer):
@@ -65,7 +81,7 @@ class LineClusterer(Clusterer):
         )
         self.model.fit(list(encoded_inputs_iterator))
         return self
-        
+
     def predict(self, text):
         """ Predict the cluster for the input text
 
@@ -78,4 +94,4 @@ class LineClusterer(Clusterer):
                 )
             ]
         )
-        return labels[0], strengths[0]
+        return int(labels[0]), float(strengths[0])
