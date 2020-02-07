@@ -1,4 +1,5 @@
 import gensim
+import tqdm
 from autodoclass import reader
 from autodoclass import tokenizer
 from autodoclass import configuration
@@ -23,7 +24,7 @@ class EncodedInputIterator:
 
         :yield gensim.models.doc2vec.LabeledSentence:
         """
-        for text_index, text in enumerate(self.text_reader.yield_texts()):
+        for text_index, text in enumerate(tqdm.tqdm(self.text_reader.yield_texts())):
             yield gensim.models.doc2vec.TaggedDocument(
                 words = self.tokenizer.transform(text),
                 tags = [self.label_format.format(text_index)]

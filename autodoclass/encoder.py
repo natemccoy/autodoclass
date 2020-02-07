@@ -56,9 +56,11 @@ class DocumentEncoder(Encoder):
 
         :return self:
         """
+        print("Building vocabulary for", self)
         self.model.build_vocab(
             iterator.DocumentEncodedInputIterator(folder)
         )
+        print("Training", self)
         self.model.train(
             iterator.DocumentEncodedInputIterator(folder),
             total_words = self.model.corpus_count,
@@ -74,9 +76,11 @@ class LineEncoder(Encoder):
 
         :return self:
         """
+        print("Building vocabulary for", self)
         self.model.build_vocab(
             iterator.LineEncodedInputIterator(folder)
         )
+        print("Training", self)
         self.model.train(
             iterator.LineEncodedInputIterator(folder),
             total_words = self.model.corpus_count,

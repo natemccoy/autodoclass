@@ -1,5 +1,6 @@
 import pickle
 import io
+import tqdm
 from autodoclass import clusterer
 from autodoclass import encoder
 from autodoclass import configuration
@@ -19,10 +20,17 @@ class Autodoclass:
 
         :return self:
         """
-        self.document_encoder.train(folder)
-        self.line_encoder.train(folder)
-        self.document_clusterer.train(folder)
-        self.line_clusterer.train(folder)
+        training_steps = [
+            self.document_encoder,
+            self.line_encoder,
+            self.document_clusterer,
+            self.line_clusterer,
+        ]
+
+        for step_number, step in enumerate(tqdm.tqdm(training_steps), 1):
+            print("[{}/{}] Training {}".format(step_number, len(training_steps), step))
+            step.train(folder)
+
         return self
 
     def predict(self, document_text):
