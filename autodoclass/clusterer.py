@@ -51,6 +51,7 @@ class DocumentClusterer(Clusterer):
             lambda x:self.encoder.encode(x.words),
             iterator.DocumentEncodedInputIterator(folder)
         )
+        print("Fitting", self)
         self.model.fit(list(encoded_inputs_iterator))
         return self
 
@@ -79,6 +80,7 @@ class LineClusterer(Clusterer):
             lambda x:self.encoder.encode(x.words),
             iterator.LineEncodedInputIterator(folder)
         )
+        print("Fitting", self)
         self.model.fit(list(encoded_inputs_iterator))
         return self
 
